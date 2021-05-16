@@ -91,6 +91,7 @@ exports.changeUserPassword = async (req, res) => {
 
 exports.addProductToCart = async (req, res) => {
   try {
+    let today = new Date();
     const { user_id, productId } = req.params;
     let dataClient = await User.findOneAndUpdate(
       { UserId: user_id },
@@ -132,7 +133,11 @@ exports.addProductToCart = async (req, res) => {
                             ],
                           },
                         },
-                        { productId: "$$this", count: 1 },
+                        {
+                          productId: "$$this",
+                          count: 1,
+                          timeStamp: today,
+                        },
                       ],
                     },
                   },
@@ -207,6 +212,18 @@ exports.removeProductFromCart = async (req, res) => {
       { upsert: true }
     );
     res.status(200).send("Cart Updated");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.AddProductToWishlist = async (req, res) => {
+  try {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let dataClient = "";
+    res.status(200).send(dataClient);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");

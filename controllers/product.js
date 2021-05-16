@@ -7,6 +7,7 @@ const config = require("config");
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+var fs = require("fs");
 // const shoeImg = require("../img/shoes.jpeg");
 exports.getAllProduct = async (req, res) => {
   try {
@@ -27,16 +28,49 @@ exports.addProduct = async (req, res) => {
       let id = uuidv4();
       product = await Product.findOne({ ProductId: id });
     }
-    let smallImg = await sharp("../img/shoes.jpeg").resize(200, 200).png();
-    let largeImg = await sharp("../img/shoes.jpeg").resize(400, 400).png();
-    let mediumImg = await sharp("../img/shoes.jpeg").resize(280, 360).png();
+    let smallImg = "",
+      largeImg = "",
+      mediumImg = "";
+    await sharp("img/shoes.jpeg")
+      .resize(200, 200)
+      .toBuffer()
+      .then((data) => {
+        let buff = new Buffer(data);
+        let base64data = buff.toString("base64");
+        smallImg = base64data;
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+    await sharp("img/shoes.jpeg")
+      .resize(400, 400)
+      .toBuffer()
+      .then((data) => {
+        let buff = new Buffer(data);
+        let base64data = buff.toString("base64");
+        largeImg = base64data;
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+    await sharp("img/shoes.jpeg")
+      .resize(280, 360)
+      .toBuffer()
+      .then((data) => {
+        let buff = new Buffer(data);
+        let base64data = buff.toString("base64");
+        mediumImg = base64data;
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
     let newProduct = new Product({
       ProductId: id,
       ProductName: name,
       Categories: categories,
       price,
       description,
-      url: [],
+      url: [{ smallImg, mediumImg, largeImg }],
     });
     await newProduct.save();
     res.status(200).send("Product Added");

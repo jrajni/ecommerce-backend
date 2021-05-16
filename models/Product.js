@@ -21,7 +21,7 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
   url: {
-    type: [String],
+    type: [Object],
   },
   Timestamp: { type: Date, default: Date.now },
 });

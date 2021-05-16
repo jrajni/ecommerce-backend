@@ -7,7 +7,7 @@ const {
 } = require("../validator/index");
 const {
   registerUser,
-  changeUserPassword,
+  AddProductToWishlist,
   addProductToCart,
   fetchCartItems,
   removeProductFromCart,
@@ -37,6 +37,7 @@ router.patch("/add/:user_id/:productId", addProductToCart);
 // access Public
 // 4
 router.patch("/remove/:user_id/:productId", removeProductFromCart);
+router.patch("/wishlist/:user_id", AddProductToWishlist);
 
 // @route Post api/user/checkout
 // @desc Checkout Products
